@@ -1,15 +1,17 @@
 import sqlite3
-
 def get_user_data(username):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(':memory:') 
     cursor = conn.cursor()
     
-    # TEST CASE 2: SQL Injection (Critical Vulnerability)
-    # Why: Directly formatting a string with user input allows a hacker to 
-    # bypass login or delete the database.
-    query = "SELECT * FROM users WHERE username = '%s'" % username
+    # TEST CASE 2: SQL Injection
+    query = "SELECT * FROM users WHERE username = '" + username + "';"
     
     cursor.execute(query)
     return cursor.fetchone()
+
+# TAINTED SOURCE
+# We are simulating a user typing into a prompt.
+user_input = input("Enter username: ")
+get_user_data(user_input)
 
 print("System initialized...")
